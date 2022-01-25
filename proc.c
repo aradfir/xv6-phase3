@@ -111,7 +111,9 @@ found:
   p->context = (struct context*)sp;
   memset(p->context, 0, sizeof *p->context);
   p->context->eip = (uint)forkret;
-
+  p->turnaround_time=0;
+  p->CBT=0;
+  p->waiting_time=0;
   return p;
 }
 
@@ -220,7 +222,22 @@ fork(void)
 
   return pid;
 }
+// CHANGE WAITING AND RUNNING AND CBT
+void updateProcessTimes(void){
+    struct proc *p;
+    acquire(&ptable.lock);
+    for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
+        if (p->state==UNUSED||p->state==EMBRYO||p->state==ZOMBIE)
+            continue;
+        p->turnaround_time++;
+        if(p->state==RUNNABLE)
+            p->waiting_time++;
+        if(p->state==RUNNING)
+            p->CBT++;
+    }
+    release(&ptable.lock);
 
+}
 // Exit the current process.  Does not return.
 // An exited process remains in the zombie state
 // until its parent calls wait() to find out it exited.
