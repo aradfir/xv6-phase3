@@ -120,6 +120,7 @@ void            userinit(void);
 int             wait(void);
 void            wakeup(void*);
 void            yield(void);
+void            updateProcessTimes(void);
 int             changePolicy(int value);
 
 // swtch.S
