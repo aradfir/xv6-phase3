@@ -89,3 +89,14 @@ sys_uptime(void)
   release(&tickslock);
   return xticks;
 }
+
+
+
+int
+sys_changePolicy(void)
+{
+  char* stack;
+  if ((argptr(0, &stack, sizeof stack)) < 0)
+    return -1;
+  return changePolicy((void*)stack);  
+}
