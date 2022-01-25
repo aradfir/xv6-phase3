@@ -112,3 +112,10 @@ sys_getWaitingTime(void)
 {
   return myproc()->waiting_time;
 }
+
+
+int
+sys_getCBT(void)
+{
+  return myproc()->CBT;
+}

@@ -23,3 +23,4 @@
 #define SYS_changePolicy 22
 #define SYS_getTurnaroundTime 23
 #define SYS_getWaitingTime 24
+#define SYS_getCBT 25
