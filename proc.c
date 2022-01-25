@@ -532,3 +532,13 @@ procdump(void)
     cprintf("\n");
   }
 }
+
+
+
+
+int
+changPolicy(void *stack)
+{
+  schedulingMethod = (int)((char*)stack + PGSIZE);
+  return schedulingMethod;
+}
