@@ -22,3 +22,4 @@
 #define SYS_close  21
 #define SYS_changePolicy 22
 #define SYS_getTurnaroundTime 23
+#define SYS_getWaitingTime 24

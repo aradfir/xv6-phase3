@@ -106,3 +106,9 @@ sys_getTurnaroundTime(void)
 {
   return myproc()->turnaround_time;
 }
+
+int
+sys_getWaitingTime(void)
+{
+  return myproc()->waiting_time;
+}
