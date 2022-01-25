@@ -95,8 +95,8 @@ sys_uptime(void)
 int
 sys_changePolicy(void)
 {
-  char* stack;
-  if ((argptr(0, &stack, sizeof stack)) < 0)
+  int value;
+  if ((argint(0, &value)) < 0)
     return -1;
-  return changePolicy((void*)stack);  
+  return changePolicy(value);  
 }

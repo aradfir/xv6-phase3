@@ -537,8 +537,8 @@ procdump(void)
 
 
 int
-changPolicy(void *stack)
+changePolicy(int value)
 {
-  schedulingMethod = (int)((char*)stack + PGSIZE);
+  schedulingMethod = value;
   return schedulingMethod;
 }

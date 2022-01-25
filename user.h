@@ -23,7 +23,7 @@ int getpid(void);
 char* sbrk(int);
 int sleep(int);
 int uptime(void);
-int changePolicy(void *stack);
+int changePolicy(int value);
 
 // ulib.c
 int stat(const char*, struct stat*);
