@@ -608,3 +608,11 @@ consolePrint(char* msg)
   cprintf(msg);
   return 0;
 }
+
+
+int
+changePriority(int priority)
+{
+  myproc()->priority = priority;
+  return 0;
+}

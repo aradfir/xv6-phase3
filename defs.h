@@ -125,6 +125,7 @@ int             changePolicy(int value);
 int             getTurnaroundTime(void);
 int             getWaitingTime(void);
 int             getCBT(void);
+int             changePriority(int priority);
 
 // swtch.S
 void            swtch(struct context**, struct context*);

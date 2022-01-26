@@ -108,6 +108,7 @@ extern int sys_getTurnaroundTime(void);
 extern int sys_getWaitingTime(void);
 extern int sys_getCBT(void);
 extern int sys_consolePrint(void);
+extern int sys_changePriority(void);
 
 static int (*syscalls[])(void) = {
 [SYS_fork]    sys_fork,
@@ -136,6 +137,7 @@ static int (*syscalls[])(void) = {
 [SYS_getWaitingTime] sys_getWaitingTime,
 [SYS_getCBT] sys_getCBT,
 [SYS_consolePrint] sys_consolePrint,
+[SYS_changePriority] sys_changePriority,
 };
 
 void

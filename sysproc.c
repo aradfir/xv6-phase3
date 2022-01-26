@@ -129,3 +129,13 @@ sys_consolePrint(void)
     return -1;
   return consolePrint(msg);
 }
+
+
+int
+sys_changePriority(void)
+{
+  int priority;
+  if ((argint(0, &priority)) < 0)
+    return -1;
+  return changePriority(priority);  
+}

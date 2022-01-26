@@ -25,3 +25,4 @@
 #define SYS_getWaitingTime 24
 #define SYS_getCBT 25
 #define SYS_consolePrint 26
+#define SYS_changePriority 27
