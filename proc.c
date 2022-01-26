@@ -358,6 +358,10 @@ scheduler(void)
           // Switch to chosen process.  It is the process's job
           // to release ptable.lock and then reacquire it
           // before jumping back to us.
+          if(schedulingMethod==1)
+            p->quantum_time_left=QUANTUM;
+          else
+              p->quantum_time_left=1;
           c->proc = p;
           switchuvm(p);
           p->state = RUNNING;
@@ -395,6 +399,7 @@ scheduler(void)
             // Switch to chosen process.  It is the process's job
             // to release ptable.lock and then reacquire it
             // before jumping back to us.
+            p->quantum_time_left=QUANTUM;
             c->proc = p;
             switchuvm(p);
             p->state = RUNNING;
@@ -613,6 +618,9 @@ consolePrint(char* msg)
 int
 changePriority(int priority)
 {
-  myproc()->priority = priority;
+  if(priority>=1 && priority<=6 )
+    myproc()->priority = priority;
+  else
+      myproc()->priority=5;
   return 0;
 }
