@@ -632,8 +632,7 @@ changePriority(int priority)
 int
 roundRobinTest()
 {
-    changePolicy(0);
-
+    changePolicy(1);
     int pid = fork();
     if (pid < 0){
         cprintf("fork error\n");
