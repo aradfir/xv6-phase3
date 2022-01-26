@@ -4,11 +4,9 @@
 
 
 
-
-
-
-int main(void)
+int
+main(void)
 {
-    roundRobinTest();
+    prioritySchedTest();
     return 0;
 }

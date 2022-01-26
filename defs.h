@@ -127,6 +127,7 @@ int             getWaitingTime(void);
 int             getCBT(void);
 int             changePriority(int priority);
 int             roundRobinTest(void);
+int             prioritySchedTest(void);
 
 // swtch.S
 void            swtch(struct context**, struct context*);

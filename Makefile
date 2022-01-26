@@ -183,6 +183,7 @@ UPROGS=\
 	_zombie\
 	_changePolicyTest\
 	_roundRobinTest\
+	_prioritySchedTest\
 
 fs.img: mkfs README $(UPROGS)
 	./mkfs fs.img README $(UPROGS)
@@ -257,6 +258,7 @@ EXTRA=\
 	.gdbinit.tmpl gdbutil\
 	changePolicyTest.c\
 	roundRobinTest.c\
+	prioritySchedTest.c\
 
 dist:
 	rm -rf dist
