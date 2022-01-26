@@ -434,7 +434,7 @@ scheduler(void)
             }
 
         }
-        else if(schedulingMethod==3){
+        else if(schedulingMethod==3||schedulingMethod==4){
             int minPriority=6;
             //find lowest priority value
             for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
