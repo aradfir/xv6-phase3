@@ -666,9 +666,11 @@ prioritySchedTest(void)
     cprintf("Turnaround time of %d : %d\n" , turnaroundTime , pid);
     cprintf("Waiting time of %d : %d\n" , waitingTime , pid);
     cprintf("CBT of %d : %d\n" , cbt , pid);
+    exit();
   } else {
     for (int i=0 ; i<30 ; i++) {
       wait();
     }
   }
+  return 0;
 }
