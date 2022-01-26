@@ -660,9 +660,9 @@ prioritySchedTest(void)
     for (int j=1 ; j<251 ; j++) {
       cprintf("%d : %d\n" , pid , j);
     }
-    int turnaroundTime = getTurnaroundTime();
-    int waitingTime = getWaitingTime();
-    int cbt = getCBT();
+    int turnaroundTime = myproc()->turnaround_time;
+    int waitingTime = myproc()->waiting_time;
+    int cbt = myproc()->CBT;
     cprintf("Turnaround time of %d : %d\n" , turnaroundTime , pid);
     cprintf("Waiting time of %d : %d\n" , waitingTime , pid);
     cprintf("CBT of %d : %d\n" , cbt , pid);
