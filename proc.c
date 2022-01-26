@@ -228,6 +228,19 @@ fork(void)
 
   return pid;
 }
+int existsBetterProcess(void){
+    int current_priority=myproc()->priority;
+    struct proc *p;
+    acquire(&ptable.lock);
+    for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
+        if(p->state==RUNNABLE && p->priority<current_priority){
+            release(&ptable.lock)
+            return 1;
+        }
+    }
+    release(&ptable.lock)
+    return 0
+}
 // CHANGE WAITING AND RUNNING AND CBT
 void updateProcessTimes(void){
     struct proc *p;
