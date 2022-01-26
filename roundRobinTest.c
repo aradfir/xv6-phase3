@@ -31,15 +31,15 @@ int main(void)
         int turnaroundTime = getTurnaroundTime();
         int waitingTime = getWaitingTime();
         int cbt = getCBT();
-        sleep(1400+20*pid);
+        sleep(1000+20*pid);
         printf(1,"Turnaround time of %d : %d\n" , pid , turnaroundTime);
         printf(1,"Waiting time of %d : %d\n" , pid , waitingTime);
         printf(1,"CBT of %d : %d\n" , pid , cbt);
         exit();
     } else {
         for (int i=0 ; i<10 ; i++) {
-            printf(1,"Wait %d is finished\n",i);
             wait();
+            printf(1,"Wait %d is finished\n",i);
         }
     }
     exit();

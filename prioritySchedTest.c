@@ -7,6 +7,67 @@
 int
 main(void)
 {
-    prioritySchedTest();
-    return 0;
+    changePolicy(2);
+    changePriority(1);
+    int i=0;
+    int k = getpid();
+    printf(1,"parent pid : %d\n" , k);
+    int pid = fork();
+    if (pid < 0){
+        printf(1,"fork error\n");
+        return 0;
+    }
+    printf(1,"fork 1 completed\n");
+    for (i=1 ; i< 30 ; i++) {
+        if (getpid() == k) {
+            pid = fork();
+            if (pid < 0){
+                printf(1,"fork error\n");
+                exit();
+            }
+            printf(1,"fork %d completed\n",i+1);
+        } else {
+            break;
+        }
+    }
+    changePriority(6);
+    if (getpid() != k) {
+        pid = getpid();
+        if (i < 5) {
+        changePriority(6);
+        } 
+        else if (i < 10 && i > 4) {
+        changePriority(5);
+        }
+        else if (i < 15 && i > 9) {
+        changePriority(4);
+        }
+        else if (i < 20 && i > 14) {
+        changePriority(3);
+        }
+        else if (i < 25 && i > 19) {
+        changePriority(2);
+        }
+        else if (i < 30 && i > 24) {
+        changePriority(1);
+        }
+        for (int j=1 ; j<6 ; j++) {
+            printf(1,"%d : %d\n" , pid , j);
+        }
+        int turnaroundTime = getTurnaroundTime();
+        int waitingTime = getWaitingTime();
+        int cbt = getCBT();
+        sleep(1400+20*pid);
+        printf(1,"Turnaround time of %d : %d\n" , pid , turnaroundTime);
+        printf(1,"Waiting time of %d : %d\n" , pid , waitingTime);
+        printf(1,"CBT of %d : %d\n" , pid , cbt);
+        exit();
+    } else {
+        changePriority(1);
+        for (int i=0 ; i<30 ; i++) {
+            wait();
+            printf(1,"Wait %d is finished\n",i);
+        }
+    }
+    exit();
 }
