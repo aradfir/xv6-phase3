@@ -1,4 +1,4 @@
-int schedulingMethod;
+extern int schedulingMethod;
 
 
 // Per-CPU state

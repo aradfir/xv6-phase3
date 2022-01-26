@@ -49,8 +49,9 @@ trap(struct trapframe *tf)
   switch(tf->trapno){
   case T_IRQ0 + IRQ_TIMER:
     if(cpuid() == 0){
-      //myproc()->quantum_time_left--;
+
       acquire(&tickslock);
+    //  myproc()->quantum_time_left--;
       updateProcessTimes();
       ticks++;
       wakeup(&ticks);
@@ -106,11 +107,12 @@ trap(struct trapframe *tf)
   // If interrupts were on while locks held, would need to check nlock.
   if(myproc() && myproc()->state == RUNNING &&
      tf->trapno == T_IRQ0+IRQ_TIMER ) {
-      //if(schedulingMethod==0)
-      //  yield();
-      //else if (schedulingMethod==1 && myproc()->quantum_time_left==0)
-      //    yield();
-      //else if(schedulingMethod==2 && myproc()->quantum_time_left==0)
+      decrement_timer();
+      if(schedulingMethod==0)
+        yield();
+      else if (schedulingMethod==1 && myproc()->quantum_time_left==0)
+          yield();
+      else if(schedulingMethod==2 && myproc()->quantum_time_left==0)
           yield();
   }
 
