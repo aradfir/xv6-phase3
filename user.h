@@ -24,6 +24,9 @@ char* sbrk(int);
 int sleep(int);
 int uptime(void);
 int changePolicy(int value);
+int getTurnaroundTime(void);
+int getWaitingTime(void);
+int getCBT(void);
 
 // ulib.c
 int stat(const char*, struct stat*);

@@ -100,3 +100,22 @@ sys_changePolicy(void)
     return -1;
   return changePolicy(value);  
 }
+
+int
+sys_getTurnaroundTime(void)
+{
+  return myproc()->turnaround_time;
+}
+
+int
+sys_getWaitingTime(void)
+{
+  return myproc()->waiting_time;
+}
+
+
+int
+sys_getCBT(void)
+{
+  return myproc()->CBT;
+}
