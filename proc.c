@@ -364,6 +364,7 @@ scheduler(void)
     struct cpu *c = mycpu();
     c->proc = 0;
     schedulingMethod=0;
+    int multiQueueQuanta[6]={30,20,10,6,3,1};
     for(;;){
         // Enable interrupts on this processor.
         sti();
@@ -432,6 +433,43 @@ scheduler(void)
                 c->proc = 0;
             }
 
+        }
+        else if(schedulingMethod==3){
+            int minPriority=6;
+            //find lowest priority value
+            for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
+                if(p->priority<minPriority)
+                    minPriority=p->priority;
+            }
+            //find queue of programs with the lowest priority
+            struct proc lowPriorityProcs[NPROC];
+            int i=0;
+            for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
+                if(p->priority==minPriority)
+                {
+                    lowPriorityProcs[i++]=*p;
+                }
+            }
+            int k=0;
+            for(p = ptable.proc; p < &lowPriorityProcs[NPROC] && k<i; p++,k++){
+                if(p->state != RUNNABLE)
+                    continue;
+
+                // Switch to chosen process.  It is the process's job
+                // to release ptable.lock and then reacquire it
+                // before jumping back to us.
+                p->quantum_time_left=multiQueueQuanta[p->priority];
+                c->proc = p;
+                switchuvm(p);
+                p->state = RUNNING;
+
+                swtch(&(c->scheduler), p->context);
+                switchkvm();
+
+                // Process is done running for now.
+                // It should have changed its p->state before coming back.
+                c->proc = 0;
+            }
         }
         release(&ptable.lock);
 
