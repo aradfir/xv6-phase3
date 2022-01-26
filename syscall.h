@@ -24,3 +24,4 @@
 #define SYS_getTurnaroundTime 23
 #define SYS_getWaitingTime 24
 #define SYS_getCBT 25
+#define SYS_consolePrint 26

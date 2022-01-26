@@ -107,6 +107,7 @@ extern int sys_changePolicy(void);
 extern int sys_getTurnaroundTime(void);
 extern int sys_getWaitingTime(void);
 extern int sys_getCBT(void);
+extern int sys_consolePrint(void);
 
 static int (*syscalls[])(void) = {
 [SYS_fork]    sys_fork,
@@ -134,6 +135,7 @@ static int (*syscalls[])(void) = {
 [SYS_getTurnaroundTime] sys_getTurnaroundTime,
 [SYS_getWaitingTime] sys_getWaitingTime,
 [SYS_getCBT] sys_getCBT,
+[SYS_consolePrint] sys_consolePrint,
 };
 
 void

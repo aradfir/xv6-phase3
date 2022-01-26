@@ -122,6 +122,9 @@ void            wakeup(void*);
 void            yield(void);
 void            updateProcessTimes(void);
 int             changePolicy(int value);
+int             getTurnaroundTime(void);
+int             getWaitingTime(void);
+int             getCBT(void);
 
 // swtch.S
 void            swtch(struct context**, struct context*);

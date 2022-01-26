@@ -375,7 +375,7 @@ scheduler(void)
         //find lowest priority value
         for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
                 if(p->priority<minPriority)
-                    minPriority=p->priority
+                    minPriority=p->priority;
         }
         //find queue of programs with the lowest priority
         struct proc lowPriorityProcs[NPROC];
@@ -599,4 +599,12 @@ changePolicy(int value)
 {
   schedulingMethod = value;
   return schedulingMethod;
+}
+
+
+int
+consolePrint(char* msg)
+{
+  cprintf(msg);
+  return 0;
 }

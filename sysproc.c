@@ -119,3 +119,13 @@ sys_getCBT(void)
 {
   return myproc()->CBT;
 }
+
+
+int 
+sys_consolePrint(void)
+{
+  char* msg;
+  if ((argptr(0,&msg,sizeof msg)) < 0)
+    return -1;
+  return consolePrint(msg);
+}

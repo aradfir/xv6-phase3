@@ -27,6 +27,7 @@ int changePolicy(int value);
 int getTurnaroundTime(void);
 int getWaitingTime(void);
 int getCBT(void);
+int consolePrint(char* msg);
 
 // ulib.c
 int stat(const char*, struct stat*);
