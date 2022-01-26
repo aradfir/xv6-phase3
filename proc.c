@@ -15,6 +15,7 @@ struct {
 static struct proc *initproc;
 
 int nextpid = 1;
+int schedulingMethod=0;
 extern void forkret(void);
 extern void trapret(void);
 
@@ -115,9 +116,14 @@ found:
   p->CBT=0;
   p->waiting_time=0;
   p->priority=3;
+  p->quantum_time_left=0;
   return p;
 }
 
+void decrement_timer(void){
+    myproc()->quantum_time_left--;
+    return;
+}
 //PAGEBREAK: 32
 // Set up first user process.
 void
@@ -340,43 +346,84 @@ wait(void)
 void
 scheduler(void)
 {
-  struct proc *p;
-  struct cpu *c = mycpu();
-  c->proc = 0;
+    struct proc *p;
+    struct cpu *c = mycpu();
+    c->proc = 0;
+    schedulingMethod=0;
+    for(;;){
+        // Enable interrupts on this processor.
+        sti();
 
-  for(;;){
-    // Enable interrupts on this processor.
-    sti();
+        // Loop over process table looking for process to run.
+        acquire(&ptable.lock);
+        if(schedulingMethod==0||schedulingMethod==1){
+            for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
+                if(p->state != RUNNABLE)
+                    continue;
 
-    // Loop over process table looking for process to run.
-    acquire(&ptable.lock);
-    //if(schedulingMethod==0||schedulingMethod==1){
-        for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
-          if(p->state != RUNNABLE)
-            continue;
+                // Switch to chosen process.  It is the process's job
+                // to release ptable.lock and then reacquire it
+                // before jumping back to us.
+                if(schedulingMethod==1)
+                    p->quantum_time_left=QUANTUM;
+                else
+                    p->quantum_time_left=1;
+                c->proc = p;
+                switchuvm(p);
+                p->state = RUNNING;
 
-          // Switch to chosen process.  It is the process's job
-          // to release ptable.lock and then reacquire it
-          // before jumping back to us.
-          //if(schedulingMethod==1)
-          //  p->quantum_time_left=QUANTUM;
-          //else
-            //  p->quantum_time_left=1;
-          c->proc = p;
-          switchuvm(p);
-          p->state = RUNNING;
+                swtch(&(c->scheduler), p->context);
+                switchkvm();
 
-          swtch(&(c->scheduler), p->context);
-          switchkvm();
-
-          // Process is done running for now.
-          // It should have changed its p->state before coming back.
-          c->proc = 0;
+                // Process is done running for now.
+                // It should have changed its p->state before coming back.
+                c->proc = 0;
+            }
         }
-    //}
-    release(&ptable.lock);
-  }
+        else if (schedulingMethod==2){
+            int minPriority=6;
+            //find lowest priority value
+            for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
+                if(p->priority<minPriority)
+                    minPriority=p->priority;
+            }
+            //find queue of programs with the lowest priority
+            struct proc lowPriorityProcs[NPROC];
+            int i=0;
+            for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
+                if(p->priority==minPriority)
+                {
+                    lowPriorityProcs[i++]=*p;
+                }
+            }
+            //run round robin - similar to main round robin but the processes are the ones in this queue
+            int k=0;
+            for(p = ptable.proc; p < &lowPriorityProcs[NPROC] && k<i; p++,k++){
+                if(p->state != RUNNABLE)
+                    continue;
+
+                // Switch to chosen process.  It is the process's job
+                // to release ptable.lock and then reacquire it
+                // before jumping back to us.
+                p->quantum_time_left=QUANTUM;
+                c->proc = p;
+                switchuvm(p);
+                p->state = RUNNING;
+
+                swtch(&(c->scheduler), p->context);
+                switchkvm();
+
+                // Process is done running for now.
+                // It should have changed its p->state before coming back.
+                c->proc = 0;
+            }
+
+        }
+        release(&ptable.lock);
+
+    }
 }
+
 
 // Enter scheduler.  Must hold only ptable.lock
 // and have changed proc->state. Saves and restores
@@ -584,7 +631,7 @@ changePriority(int priority)
 int
 roundRobinTest()
 {
-    changePolicy(1);
+    changePolicy(0);
     int pid = fork();
     for (int i=0 ; i<9 ; i++) {
         if (pid != 0) {
