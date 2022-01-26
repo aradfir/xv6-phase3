@@ -52,7 +52,7 @@ struct proc {
   struct file *ofile[NOFILE];  // Open files
   struct inode *cwd;           // Current directory
   char name[16];               // Process name (debugging)
-  int quantum_time_left=QUANTUM;
+  int quantum_time_left;
   int waiting_time;
   int turnaround_time;
   int CBT;

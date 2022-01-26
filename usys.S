@@ -33,5 +33,5 @@ SYSCALL(changePolicy)
 SYSCALL(getTurnaroundTime)
 SYSCALL(getWaitingTime)
 SYSCALL(getCBT)
-SYSCALL(consolePrint)
 SYSCALL(changePriority)
+SYSCALL(roundRobinTest);

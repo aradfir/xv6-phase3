@@ -121,14 +121,6 @@ sys_getCBT(void)
 }
 
 
-int 
-sys_consolePrint(void)
-{
-  char* msg;
-  if ((argptr(0,&msg,sizeof msg)) < 0)
-    return -1;
-  return consolePrint(msg);
-}
 
 
 int
@@ -138,4 +130,11 @@ sys_changePriority(void)
   if ((argint(0, &priority)) < 0)
     return -1;
   return changePriority(priority);  
+}
+
+
+int
+sys_roundRobinTest(void)
+{
+  return roundRobinTest();
 }

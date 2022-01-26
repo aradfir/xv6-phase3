@@ -607,12 +607,7 @@ changePolicy(int value)
 }
 
 
-int
-consolePrint(char* msg)
-{
-  cprintf(msg);
-  return 0;
-}
+
 
 
 int
@@ -622,5 +617,80 @@ changePriority(int priority)
     myproc()->priority = priority;
   else
       myproc()->priority=5;
+  return 0;
+}
+
+
+int
+roundRobinTest()
+{
+    changePolicy(1);
+    int pid = fork();
+    for (int i=0 ; i<9 ; i++) {
+        if (pid == 0) {
+            pid = fork();
+            if (pid < 0){ 
+                cprintf("fork error\n");
+                return 0;
+            }
+            //char* catted = strcat("fork \0", toString(i));
+            cprintf("fork %d completed\n",i);
+            //consolePrint(strcat(catted," completed\n\0"));
+            //consolePrint("fork ");
+            //consolePrint(toString(i));
+            //consolePrint(" completed\n");
+        } else {
+            break;
+        }
+    }
+    if (pid != 0){
+        for (int j=1 ; j<5 ; j++) {
+            cprintf("%d : %d\n" , pid , j);
+            //char* catted = strcat(toString(pid) , " : \0");
+            //char* catted2 = strcat(catted, toString(j));
+            //consolePrint(strcat(catted2 , "\n\0"));
+            //consolePrint(toString(pid));
+            //consolePrint(" : ");
+            //consolePrint(toString(j));
+            //consolePrint("\n");
+        }
+        int turnaroundTime = myproc()->turnaround_time;
+        int waitingTime = myproc()->waiting_time;
+        int cbt = myproc()->CBT;
+        cprintf("Turnaround time of %d : %d\n" , turnaroundTime , pid);
+        //char* pidStr = toString(pid);
+        //char* catted = strcat("Turnaround time of \0" , pidStr) ;
+        //char* catted2 = strcat(catted, " : \0");
+        //char* catted3 = strcat(catted2, toString(turnaroundTime));
+        //consolePrint(strcat(catted3, "\n\0"));
+        //consolePrint("Turnaround time of ");
+        //consolePrint(pidStr);
+        //consolePrint(" : ");
+        //consolePrint(toString(turnaroundTime));
+        //consolePrint("\n");
+        cprintf("Waiting time of %d : %d\n" , waitingTime , pid);
+        //catted = strcat("Waiting time of \0" , pidStr) ;
+        //catted2 = strcat(catted, " : \0");
+        //catted3 = strcat(catted2, toString(waitingTime));
+        //consolePrint(strcat(catted3, "\n\0"));
+        //consolePrint("Waiting time of ");
+        //consolePrint(pidStr);
+        //consolePrint(" : ");
+        //consolePrint(toString(waitingTime));
+        //consolePrint("\n");
+        cprintf("CBT of %d : %d\n" , cbt , pid);
+        //catted = strcat("CBT of \0" , pidStr) ;
+        //catted2 = strcat(catted, " : \0");
+        //catted3 = strcat(catted2, toString(cbt));
+        //consolePrint(strcat(catted3, "\n\0"));
+        //consolePrint("CBT of ");
+        //consolePrint(pidStr);
+        //consolePrint(" : ");
+        //consolePrint(toString(cbt));
+    } else {
+        for (int i=0 ; i<10 ; i++) {
+            wait();
+        }
+    }
   return 0;
 }
