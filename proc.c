@@ -350,7 +350,7 @@ scheduler(void)
 
     // Loop over process table looking for process to run.
     acquire(&ptable.lock);
-    if(schedulingMethod==0||schedulingMethod==1){
+    //if(schedulingMethod==0||schedulingMethod==1){
         for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
           if(p->state != RUNNABLE)
             continue;
@@ -358,10 +358,10 @@ scheduler(void)
           // Switch to chosen process.  It is the process's job
           // to release ptable.lock and then reacquire it
           // before jumping back to us.
-          if(schedulingMethod==1)
-            p->quantum_time_left=QUANTUM;
-          else
-              p->quantum_time_left=1;
+          //if(schedulingMethod==1)
+          //  p->quantum_time_left=QUANTUM;
+          //else
+            //  p->quantum_time_left=1;
           c->proc = p;
           switchuvm(p);
           p->state = RUNNING;
@@ -373,48 +373,8 @@ scheduler(void)
           // It should have changed its p->state before coming back.
           c->proc = 0;
         }
-    }
-    else if (schedulingMethod==2){
-        int minPriority=6;
-        //find lowest priority value
-        for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
-                if(p->priority<minPriority)
-                    minPriority=p->priority;
-        }
-        //find queue of programs with the lowest priority
-        struct proc lowPriorityProcs[NPROC];
-        int i=0;
-        for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
-            if(p->priority==minPriority)
-            {
-                lowPriorityProcs[i++]=*p;
-            }
-        }
-        //run round robin - similar to main round robin but the processes are the ones in this queue
-        int k=0;
-        for(p = ptable.proc; p < &lowPriorityProcs[NPROC] && k<i; p++,k++){
-            if(p->state != RUNNABLE)
-                continue;
-
-            // Switch to chosen process.  It is the process's job
-            // to release ptable.lock and then reacquire it
-            // before jumping back to us.
-            p->quantum_time_left=QUANTUM;
-            c->proc = p;
-            switchuvm(p);
-            p->state = RUNNING;
-
-            swtch(&(c->scheduler), p->context);
-            switchkvm();
-
-            // Process is done running for now.
-            // It should have changed its p->state before coming back.
-            c->proc = 0;
-        }
-
-    }
+    //}
     release(&ptable.lock);
-
   }
 }
 
@@ -627,70 +587,88 @@ roundRobinTest()
     changePolicy(1);
     int pid = fork();
     for (int i=0 ; i<9 ; i++) {
-        if (pid == 0) {
+        if (pid != 0) {
             pid = fork();
             if (pid < 0){ 
                 cprintf("fork error\n");
                 return 0;
             }
-            //char* catted = strcat("fork \0", toString(i));
             cprintf("fork %d completed\n",i);
-            //consolePrint(strcat(catted," completed\n\0"));
-            //consolePrint("fork ");
-            //consolePrint(toString(i));
-            //consolePrint(" completed\n");
         } else {
             break;
         }
     }
-    if (pid != 0){
+    if (pid == 0){
+        pid = myproc()->pid;
         for (int j=1 ; j<5 ; j++) {
             cprintf("%d : %d\n" , pid , j);
-            //char* catted = strcat(toString(pid) , " : \0");
-            //char* catted2 = strcat(catted, toString(j));
-            //consolePrint(strcat(catted2 , "\n\0"));
-            //consolePrint(toString(pid));
-            //consolePrint(" : ");
-            //consolePrint(toString(j));
-            //consolePrint("\n");
         }
         int turnaroundTime = myproc()->turnaround_time;
         int waitingTime = myproc()->waiting_time;
         int cbt = myproc()->CBT;
         cprintf("Turnaround time of %d : %d\n" , turnaroundTime , pid);
-        //char* pidStr = toString(pid);
-        //char* catted = strcat("Turnaround time of \0" , pidStr) ;
-        //char* catted2 = strcat(catted, " : \0");
-        //char* catted3 = strcat(catted2, toString(turnaroundTime));
-        //consolePrint(strcat(catted3, "\n\0"));
-        //consolePrint("Turnaround time of ");
-        //consolePrint(pidStr);
-        //consolePrint(" : ");
-        //consolePrint(toString(turnaroundTime));
-        //consolePrint("\n");
         cprintf("Waiting time of %d : %d\n" , waitingTime , pid);
-        //catted = strcat("Waiting time of \0" , pidStr) ;
-        //catted2 = strcat(catted, " : \0");
-        //catted3 = strcat(catted2, toString(waitingTime));
-        //consolePrint(strcat(catted3, "\n\0"));
-        //consolePrint("Waiting time of ");
-        //consolePrint(pidStr);
-        //consolePrint(" : ");
-        //consolePrint(toString(waitingTime));
-        //consolePrint("\n");
         cprintf("CBT of %d : %d\n" , cbt , pid);
-        //catted = strcat("CBT of \0" , pidStr) ;
-        //catted2 = strcat(catted, " : \0");
-        //catted3 = strcat(catted2, toString(cbt));
-        //consolePrint(strcat(catted3, "\n\0"));
-        //consolePrint("CBT of ");
-        //consolePrint(pidStr);
-        //consolePrint(" : ");
-        //consolePrint(toString(cbt));
+        exit();
     } else {
         for (int i=0 ; i<10 ; i++) {
             wait();
         }
     }
   return 0;
+}
+
+
+int
+prioritySchedTest(void)
+{
+  changePolicy(2);
+  int i=0;
+  int pid = fork();
+  for (i=1 ; i< 30 ; i++) {
+    if (pid != 0) {
+      pid = fork();
+      if (pid < 0){ 
+        cprintf("fork error\n");
+        return 0;
+      }
+        cprintf("fork %d completed\n",i);
+      } else {
+        break;
+      } 
+  }
+  if (pid != 0) {
+    pid = myproc()->pid;
+    if (i < 5) {
+      changePriority(6);
+    } 
+    else if (i < 10 && i > 4) {
+      changePriority(5);
+    }
+    else if (i < 15 && i > 9) {
+      changePriority(4);
+    }
+    else if (i < 20 && i > 14) {
+      changePriority(3);
+    }
+    else if (i < 25 && i > 19) {
+      changePriority(2);
+    }
+    else if (i < 30 && i > 24) {
+      changePriority(1);
+    }
+    for (int j=1 ; j<251 ; j++) {
+      cprintf("%d : %d\n" , pid , j);
+    }
+    int turnaroundTime = getTurnaroundTime();
+    int waitingTime = getWaitingTime();
+    int cbt = getCBT();
+    cprintf("Turnaround time of %d : %d\n" , turnaroundTime , pid);
+    cprintf("Waiting time of %d : %d\n" , waitingTime , pid);
+    cprintf("CBT of %d : %d\n" , cbt , pid);
+  } else {
+    for (int i=0 ; i<30 ; i++) {
+      wait();
+    }
+  }
 }

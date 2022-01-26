@@ -26,3 +26,4 @@
 #define SYS_getCBT 25
 #define SYS_changePriority 26
 #define SYS_roundRobinTest 27
+#define SYS_prioritySchedTest 28

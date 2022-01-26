@@ -109,6 +109,7 @@ extern int sys_getWaitingTime(void);
 extern int sys_getCBT(void);
 extern int sys_changePriority(void);
 extern int sys_roundRobinTest(void);
+extern int sys_prioritySchedTest(void);
 
 static int (*syscalls[])(void) = {
 [SYS_fork]    sys_fork,
@@ -138,6 +139,7 @@ static int (*syscalls[])(void) = {
 [SYS_getCBT] sys_getCBT,
 [SYS_changePriority] sys_changePriority,
 [SYS_roundRobinTest] sys_roundRobinTest,
+[SYS_prioritySchedTest] sys_prioritySchedTest,
 };
 
 void

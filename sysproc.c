@@ -138,3 +138,10 @@ sys_roundRobinTest(void)
 {
   return roundRobinTest();
 }
+
+
+int
+sys_prioritySchedTest(void)
+{
+  return prioritySchedTest();
+}
