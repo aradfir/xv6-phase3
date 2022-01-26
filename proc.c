@@ -120,10 +120,6 @@ found:
   return p;
 }
 
-void decrement_timer(void){
-    myproc()->quantum_time_left--;
-    return;
-}
 //PAGEBREAK: 32
 // Set up first user process.
 void
@@ -239,11 +235,13 @@ void updateProcessTimes(void){
         p->turnaround_time++;
         if(p->state==RUNNABLE)
             p->waiting_time++;
-        if(p->state==RUNNING)
+        if(p->state==RUNNING) {
             p->CBT++;
+            p->quantum_time_left--;
+        }
     }
     release(&ptable.lock);
-
+    return;
 }
 // Exit the current process.  Does not return.
 // An exited process remains in the zombie state
@@ -632,15 +630,21 @@ int
 roundRobinTest()
 {
     changePolicy(0);
+
     int pid = fork();
+    if (pid < 0){
+        cprintf("fork error\n");
+        return 0;
+    }
+    cprintf("fork 1 completed\n");
     for (int i=0 ; i<9 ; i++) {
         if (pid != 0) {
             pid = fork();
-            if (pid < 0){ 
+            if (pid < 0){
                 cprintf("fork error\n");
                 return 0;
             }
-            cprintf("fork %d completed\n",i);
+            cprintf("fork %d completed\n",i+2);
         } else {
             break;
         }
@@ -653,12 +657,13 @@ roundRobinTest()
         int turnaroundTime = myproc()->turnaround_time;
         int waitingTime = myproc()->waiting_time;
         int cbt = myproc()->CBT;
-        cprintf("Turnaround time of %d : %d\n" , turnaroundTime , pid);
-        cprintf("Waiting time of %d : %d\n" , waitingTime , pid);
-        cprintf("CBT of %d : %d\n" , cbt , pid);
+        cprintf("Turnaround time of %d : %d\n" , pid , turnaroundTime);
+        cprintf("Waiting time of %d : %d\n" , pid , waitingTime);
+        cprintf("CBT of %d : %d\n" , pid , cbt);
         exit();
     } else {
         for (int i=0 ; i<10 ; i++) {
+            cprintf("Wait %d is finished\n",i);
             wait();
         }
     }
@@ -710,9 +715,9 @@ prioritySchedTest(void)
     int turnaroundTime = myproc()->turnaround_time;
     int waitingTime = myproc()->waiting_time;
     int cbt = myproc()->CBT;
-    cprintf("Turnaround time of %d : %d\n" , turnaroundTime , pid);
-    cprintf("Waiting time of %d : %d\n" , waitingTime , pid);
-    cprintf("CBT of %d : %d\n" , cbt , pid);
+    cprintf("Turnaround time of %d : %d\n" , pid , turnaroundTime);
+    cprintf("Waiting time of %d : %d\n" , pid , waitingTime);
+    cprintf("CBT of %d : %d\n" , pid , cbt);
     exit();
   } else {
     for (int i=0 ; i<30 ; i++) {

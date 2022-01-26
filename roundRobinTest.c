@@ -10,5 +10,5 @@
 int main(void)
 {
     roundRobinTest();
-    return 0;
+    exit();
 }
