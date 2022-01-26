@@ -234,12 +234,12 @@ int existsBetterProcess(void){
     acquire(&ptable.lock);
     for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
         if(p->state==RUNNABLE && p->priority<current_priority){
-            release(&ptable.lock)
+            release(&ptable.lock);
             return 1;
         }
     }
-    release(&ptable.lock)
-    return 0
+    release(&ptable.lock);
+    return 0;
 }
 // CHANGE WAITING AND RUNNING AND CBT
 void updateProcessTimes(void){
@@ -582,8 +582,10 @@ wakeup1(void *chan)
   struct proc *p;
 
   for(p = ptable.proc; p < &ptable.proc[NPROC]; p++)
-    if(p->state == SLEEPING && p->chan == chan)
-      p->state = RUNNABLE;
+    if(p->state == SLEEPING && p->chan == chan) {
+        p->state = RUNNABLE;
+        p->priority=1;
+    }
 }
 
 // Wake up all processes sleeping on chan.

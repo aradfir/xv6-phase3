@@ -113,6 +113,16 @@ trap(struct trapframe *tf)
           yield();
       else if( schedulingMethod==3 && (myproc()->quantum_time_left==0 || existsBetterProcess()))
           yield();
+      else if(schedulingMethod==4){
+          if (myproc()->quantum_time_left==0)
+          {
+              myproc()->priority++;
+          }
+          else if(existsBetterProcess())
+              yield();
+
+
+      }
   }
 
   // Check if the process has been killed since we yielded
