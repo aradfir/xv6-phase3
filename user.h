@@ -29,8 +29,7 @@ int getWaitingTime(void);
 int getCBT(void);
 int consolePrint(char* msg);
 int changePriority(int priority);
-int roundRobinTest(void);
-int prioritySchedTest(void);
+
 
 // ulib.c
 int stat(const char*, struct stat*);

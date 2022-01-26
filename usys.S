@@ -34,5 +34,4 @@ SYSCALL(getTurnaroundTime)
 SYSCALL(getWaitingTime)
 SYSCALL(getCBT)
 SYSCALL(changePriority)
-SYSCALL(roundRobinTest);
-SYSCALL(prioritySchedTest);
+

@@ -133,15 +133,3 @@ sys_changePriority(void)
 }
 
 
-int
-sys_roundRobinTest(void)
-{
-  return roundRobinTest();
-}
-
-
-int
-sys_prioritySchedTest(void)
-{
-  return prioritySchedTest();
-}
