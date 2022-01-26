@@ -53,6 +53,7 @@ struct proc {
   struct inode *cwd;           // Current directory
   char name[16];               // Process name (debugging)
   int quantum_time_left;
+  int creation_time;
   int waiting_time;
   int turnaround_time;
   int CBT;

@@ -117,6 +117,9 @@ found:
   p->waiting_time=0;
   p->priority=3;
   p->quantum_time_left=0;
+    acquire(&tickslock);
+  p->creation_time=ticks;
+    release(&tickslock);
   return p;
 }
 
