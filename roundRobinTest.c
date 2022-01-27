@@ -5,15 +5,9 @@
 int main(void)
 {
     changePolicy(1);
-    int pid = fork();
-    if (pid < 0){
-        printf(1,"fork error\n");
-        return 0;
-    }
-    printf(1,"fork 1 completed\n");
-    for (int i=0 ; i<9 ; i++) {
-        if (pid != 0) {
-            pid = fork();
+    int pid;
+    for (int i=0 ; i<10 ; i++) {
+        if ((pid=fork()) != 0) {
             if (pid < 0){
                 printf(1,"fork error\n");
                 exit();

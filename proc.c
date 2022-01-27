@@ -406,7 +406,7 @@ scheduler(void)
             struct proc lowPriorityProcs[NPROC];
             int i=0;
             for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
-                if(p->state == RUNNABLE && p->priority==minPriority)
+                if((p->state == RUNNABLE || p->state==RUNNING)&& p->priority==minPriority)
                 {
                     lowPriorityProcs[i++]=*p;
                 }
@@ -585,7 +585,8 @@ wakeup1(void *chan)
   for(p = ptable.proc; p < &ptable.proc[NPROC]; p++)
     if(p->state == SLEEPING && p->chan == chan) {
         p->state = RUNNABLE;
-        p->priority=1;
+        if(schedulingMethod==4)
+            p->priority=1;
     }
 }
 

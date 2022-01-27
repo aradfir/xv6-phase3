@@ -12,15 +12,9 @@ main(void)
     int i=0;
     int k = getpid();
     printf(1,"parent pid : %d\n" , k);
-    int pid = fork();
-    if (pid < 0){
-        printf(1,"fork error\n");
-        return 0;
-    }
-    printf(1,"fork 1 completed\n");
-    for (i=1 ; i< 30 ; i++) {
-        if (getpid() == k) {
-            pid = fork();
+    int pid;
+    for (i=0 ; i< 30 ; i++) {
+        if ((pid=fork()) !=0) {
             if (pid < 0){
                 printf(1,"fork error\n");
                 exit();
@@ -30,8 +24,9 @@ main(void)
             break;
         }
     }
-    changePriority(6);
+
     if (getpid() != k) {
+        changePriority(6);
         pid = getpid();
         if (i < 5) {
         changePriority(6);
