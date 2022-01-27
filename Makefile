@@ -184,6 +184,7 @@ UPROGS=\
 	_changePolicyTest\
 	_roundRobinTest\
 	_prioritySchedTest\
+	_multiLayeredQueuedTest\
 
 fs.img: mkfs README $(UPROGS)
 	./mkfs fs.img README $(UPROGS)
@@ -259,6 +260,7 @@ EXTRA=\
 	changePolicyTest.c\
 	roundRobinTest.c\
 	prioritySchedTest.c\
+	multiLayeredQueuedTest.c\
 
 dist:
 	rm -rf dist
