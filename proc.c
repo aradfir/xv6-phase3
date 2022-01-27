@@ -413,8 +413,10 @@ scheduler(void) {
                     i++;
                 }
 
-                if (p->state != RUNNABLE || lowPriorityProcs[k] == 0)
+                if (p->state != RUNNABLE || lowPriorityProcs[k] == 0){
+                    k++;
                     continue;
+                }
 
                 // Switch to chosen process.  It is the process's job
                 // to release ptable.lock and then reacquire it

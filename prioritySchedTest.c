@@ -21,6 +21,7 @@ main(void)
             }
             printf(1,"fork %d completed\n",i+1);
         } else {
+            changePriority(1);
             sleep(20);
             break;
         }
@@ -54,9 +55,9 @@ main(void)
         int waitingTime = getWaitingTime();
         int cbt = getCBT();
         sleep(1400+20*pid);
-        printf(1,"Turnaround time of %d : %d\n" , pid , turnaroundTime);
-        printf(1,"Waiting time of %d : %d\n" , pid , waitingTime);
-        printf(1,"CBT of %d : %d\n" , pid , cbt);
+        printf(1,"Turnaround time of %d : %d\n" , i , turnaroundTime);
+        printf(1,"Waiting time of %d : %d\n" , i , waitingTime);
+        printf(1,"CBT of %d : %d\n" , i, cbt);
         exit();
     } else {
         changePriority(1);
