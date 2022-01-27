@@ -406,14 +406,14 @@ scheduler(void)
             struct proc lowPriorityProcs[NPROC];
             int i=0;
             for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
-                if((p->state == RUNNABLE || p->state==RUNNING)&& p->priority==minPriority)
+                if(p->state == RUNNABLE&& p->priority==minPriority)
                 {
                     lowPriorityProcs[i++]=*p;
                 }
             }
             //run round robin - similar to main round robin but the processes are the ones in this queue
             int k=0;
-            for(p = ptable.proc; p < &lowPriorityProcs[NPROC] && k<i; p++){
+            for(p = ptable.proc; p < &lowPriorityProcs[NPROC] && (k++)<i; p++){
                 if(p->state != RUNNABLE)
                     continue;
 
@@ -431,7 +431,7 @@ scheduler(void)
                 // Process is done running for now.
                 // It should have changed its p->state before coming back.
                 c->proc = 0;
-                k++;
+
             }
 
         }
@@ -439,20 +439,20 @@ scheduler(void)
             int minPriority=6;
             //find lowest priority value
             for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
-                if(p->priority<minPriority)
+                if(p->state == RUNNABLE&&p->priority<minPriority)
                     minPriority=p->priority;
             }
             //find queue of programs with the lowest priority
             struct proc lowPriorityProcs[NPROC];
             int i=0;
             for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
-                if(p->priority==minPriority)
+                if(p->state == RUNNABLE&&p->priority==minPriority)
                 {
                     lowPriorityProcs[i++]=*p;
                 }
             }
             int k=0;
-            for(p = ptable.proc; p < &lowPriorityProcs[NPROC] && k<i; p++,k++){
+            for(p = ptable.proc; p < &lowPriorityProcs[NPROC] && (k++)<i; p++){
                 if(p->state != RUNNABLE)
                     continue;
 
