@@ -424,7 +424,7 @@ scheduler(void) {
                 if(schedulingMethod==2)
                     p->quantum_time_left = QUANTUM;
                 else
-                    p->quantum_time_left=multiQueueQuanta[p->priority];
+                    p->quantum_time_left=multiQueueQuanta[p->priority-1];
                 c->proc = p;
                 switchuvm(p);
                 p->state = RUNNING;
