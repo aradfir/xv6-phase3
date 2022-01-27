@@ -12,14 +12,14 @@ int main(void)
                 printf(1,"fork error\n");
                 exit();
             }
-            printf(1,"fork %d completed\n",i+2);
+            printf(1,"fork %d completed\n",i+1);
         } else {
             break;
         }
     }
     if (pid == 0){
         pid = getpid();
-        for (int j=1 ; j<1000 ; j++) {
+        for (int j=1 ; j<6 ; j++) {
             printf(1,"%d : %d\n" , pid , j);
         }
         int turnaroundTime = getTurnaroundTime();
