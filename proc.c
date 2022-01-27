@@ -390,7 +390,7 @@ scheduler(void) {
                 // It should have changed its p->state before coming back.
                 c->proc = 0;
             }
-        } else if (schedulingMethod == 2) {
+        } else if (schedulingMethod == 2|| schedulingMethod == 3 || schedulingMethod == 4) {
             //run round robin - similar to main round robin but the processes are the ones in this queue
             int k=0;
             for (p = ptable.proc; p < &ptable.proc[NPROC]; p++) {
@@ -421,7 +421,10 @@ scheduler(void) {
                 // Switch to chosen process.  It is the process's job
                 // to release ptable.lock and then reacquire it
                 // before jumping back to us.
-                p->quantum_time_left = QUANTUM;
+                if(schedulingMethod==2)
+                    p->quantum_time_left = QUANTUM;
+                else
+                    p->quantum_time_left=multiQueueQuanta[p->priority];
                 c->proc = p;
                 switchuvm(p);
                 p->state = RUNNING;
@@ -436,46 +439,47 @@ scheduler(void) {
                 k++;
             }
 
-        } else if (schedulingMethod == 3 || schedulingMethod == 4) {
-            int minPriority = 6;
-            //find lowest priority value
-            for (p = ptable.proc; p < &ptable.proc[NPROC]; p++) {
-                if (p->state == RUNNABLE && p->priority < minPriority)
-                    minPriority = p->priority;
-            }
-            //find queue of programs with the lowest priority
-            int lowPriorityProcs[NPROC];
-            int i = 0;
-            for (p = ptable.proc; p < &ptable.proc[NPROC]; p++) {
-                if (p->state == RUNNABLE && p->priority == minPriority) {
-                    lowPriorityProcs[i] = 1;
-                } else {
-                    lowPriorityProcs[i] = 0;
-                }
-                i++;
-            }
-            //run round robin - similar to main round robin but the processes are the ones in this queue
-            for (p = ptable.proc; p < &ptable.proc[NPROC]; p++) {
-                if (p->state != RUNNABLE || lowPriorityProcs[i] == 0)
-                    continue;
-
-
-                // Switch to chosen process.  It is the process's job
-                // to release ptable.lock and then reacquire it
-                // before jumping back to us.
-                p->quantum_time_left = multiQueueQuanta[p->priority];
-                c->proc = p;
-                switchuvm(p);
-                p->state = RUNNING;
-
-                swtch(&(c->scheduler), p->context);
-                switchkvm();
-
-                // Process is done running for now.
-                // It should have changed its p->state before coming back.
-                c->proc = 0;
-            }
         }
+        //else if (schedulingMethod == 3 || schedulingMethod == 4) {
+        //    int minPriority = 6;
+        //    //find lowest priority value
+        //    for (p = ptable.proc; p < &ptable.proc[NPROC]; p++) {
+        //        if (p->state == RUNNABLE && p->priority < minPriority)
+        //            minPriority = p->priority;
+        //    }
+        //    //find queue of programs with the lowest priority
+        //    int lowPriorityProcs[NPROC];
+        //    int i = 0;
+        //    for (p = ptable.proc; p < &ptable.proc[NPROC]; p++) {
+        //        if (p->state == RUNNABLE && p->priority == minPriority) {
+        //            lowPriorityProcs[i] = 1;
+        //        } else {
+        //            lowPriorityProcs[i] = 0;
+        //        }
+        //        i++;
+        //    }
+        //    //run round robin - similar to main round robin but the processes are the ones in this queue
+        //    for (p = ptable.proc; p < &ptable.proc[NPROC]; p++) {
+        //        if (p->state != RUNNABLE || lowPriorityProcs[i] == 0)
+        //            continue;
+//
+//
+        //        // Switch to chosen process.  It is the process's job
+        //        // to release ptable.lock and then reacquire it
+        //        // before jumping back to us.
+        //        p->quantum_time_left = multiQueueQuanta[p->priority];
+        //        c->proc = p;
+        //        switchuvm(p);
+        //        p->state = RUNNING;
+//
+        //        swtch(&(c->scheduler), p->context);
+        //        switchkvm();
+//
+        //        // Process is done running for now.
+        //        // It should have changed its p->state before coming back.
+        //        c->proc = 0;
+        //    }
+        //}
         release(&ptable.lock);
 
     }
