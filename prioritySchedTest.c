@@ -21,6 +21,7 @@ main(void)
             }
             printf(1,"fork %d completed\n",i+1);
         } else {
+            sleep(20);
             break;
         }
     }
@@ -46,19 +47,19 @@ main(void)
         else if (i < 30 && i > 24) {
         changePriority(1);
         }
-        for (int j=1 ; j<6 ; j++) {
+        for (int j=1 ; j<250 ; j++) {
             printf(1,"%d : %d\n" , pid , j);
         }
         int turnaroundTime = getTurnaroundTime();
         int waitingTime = getWaitingTime();
         int cbt = getCBT();
-        //sleep(1400+20*pid);
+        sleep(1400+20*pid);
         printf(1,"Turnaround time of %d : %d\n" , pid , turnaroundTime);
         printf(1,"Waiting time of %d : %d\n" , pid , waitingTime);
         printf(1,"CBT of %d : %d\n" , pid , cbt);
         exit();
     } else {
-        //changePriority(1);
+        changePriority(1);
         for (int i=0 ; i<30 ; i++) {
             wait();
             printf(1,"Wait %d is finished\n",i);
