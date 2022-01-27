@@ -391,26 +391,29 @@ scheduler(void) {
                 c->proc = 0;
             }
         } else if (schedulingMethod == 2) {
-            int minPriority = 6;
-            //find lowest priority value
-            for (p = ptable.proc; p < &ptable.proc[NPROC]; p++) {
-                if (p->state == RUNNABLE && p->priority < minPriority)
-                    minPriority = p->priority;
-            }
-            //find queue of programs with the lowest priority
-            int lowPriorityProcs[NPROC];
-            int i = 0;
-            for (p = ptable.proc; p < &ptable.proc[NPROC]; p++) {
-                if (p->state == RUNNABLE && p->priority == minPriority) {
-                    lowPriorityProcs[i] = 1;
-                } else {
-                    lowPriorityProcs[i] = 0;
-                }
-                i++;
-            }
             //run round robin - similar to main round robin but the processes are the ones in this queue
+            int k=0;
             for (p = ptable.proc; p < &ptable.proc[NPROC]; p++) {
-                if (p->state != RUNNABLE || lowPriorityProcs[i] == 0)
+                int minPriority = 6;
+                //find lowest priority value
+                struct proc * t;
+                for (t = ptable.proc; t < &ptable.proc[NPROC]; t++) {
+                    if (t->state == RUNNABLE && t->priority < minPriority)
+                        minPriority = t->priority;
+                }
+                //find queue of programs with the lowest priority
+                int lowPriorityProcs[NPROC];
+                int i = 0;
+                for (t = ptable.proc; t < &ptable.proc[NPROC]; t++) {
+                    if (t->state == RUNNABLE && t->priority == minPriority) {
+                        lowPriorityProcs[i] = 1;
+                    } else {
+                        lowPriorityProcs[i] = 0;
+                    }
+                    i++;
+                }
+
+                if (p->state != RUNNABLE || lowPriorityProcs[k] == 0)
                     continue;
 
                 // Switch to chosen process.  It is the process's job
@@ -428,6 +431,7 @@ scheduler(void) {
                 // It should have changed its p->state before coming back.
                 c->proc = 0;
 
+                k++;
             }
 
         } else if (schedulingMethod == 3 || schedulingMethod == 4) {
