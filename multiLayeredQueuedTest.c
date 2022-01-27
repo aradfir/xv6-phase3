@@ -8,10 +8,10 @@ int
 main(void)
 {
     changePolicy(3);
-    changePriority(1);
+    //changePriority(1);
     int i=0;
-    int k = getpid();
-    printf(1,"parent pid : %d\n" , k);
+    //int k = getpid();
+    //printf(1,"parent pid : %d\n" , k);
     int pid;
     for (i=0 ; i< 60 ; i++) {
         if ((pid=fork()) !=0) {
@@ -21,12 +21,14 @@ main(void)
             }
             printf(1,"fork %d completed\n",i+1);
         } else {
+            changePriority(1);
+            sleep(20);
             break;
         }
     }
 
-    if (getpid() != k) {
-        changePriority(6);
+    if (pid == 0) {
+        //changePriority(6);
         pid = getpid();
         if (i < 10) {
         changePriority(1);
@@ -53,9 +55,9 @@ main(void)
         int waitingTime = getWaitingTime();
         int cbt = getCBT();
         sleep(1400+20*pid);
-        printf(1,"Turnaround time of %d : %d\n" , pid , turnaroundTime);
-        printf(1,"Waiting time of %d : %d\n" , pid , waitingTime);
-        printf(1,"CBT of %d : %d\n" , pid , cbt);
+        printf(1,"Turnaround time of %d : %d\n" , i , turnaroundTime);
+        printf(1,"Waiting time of %d : %d\n" , i , waitingTime);
+        printf(1,"CBT of %d : %d\n" , i , cbt);
         exit();
     } else {
         changePriority(1);
